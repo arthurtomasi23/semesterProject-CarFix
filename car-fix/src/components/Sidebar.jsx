@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   return (
     <div className="flex flex-col h-screen w-64 bg-black text-gray-100 text-left">
-      <div className="flex items-center justify-center h-16 bg-orange-800">
+      <div className="flex items-center justify-center h-16 bg-orange-700">
         <h1 className="text-xl font-bold">CARFIX</h1>
       </div>
       <nav className="flex-grow">

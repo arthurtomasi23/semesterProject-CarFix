@@ -1,15 +1,18 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
-import HomeScreen from "../components/HomeScreen";
+import StepByStep from "../components/StepByStep";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const App = () => {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex-1">
-        <HomeScreen />
+    <ChakraProvider>
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+          <StepByStep />
+        </div>
       </div>
-    </div>
+    </ChakraProvider>
   );
 };
 
