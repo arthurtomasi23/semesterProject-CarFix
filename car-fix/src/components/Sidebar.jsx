@@ -1,68 +1,64 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
-import {HomeIcon, CollectionIcon, DocumentAddIcon, BookmarkIcon, CogIcon, UserIcon} from '@heroicons/react/outline';
+import { Flex, Avatar, Heading, Text, Divider, IconButton } from '@chakra-ui/react';
+import { FiHome, FiMenu, FiSearch, FiSettings, FiUpload, FiUser } from 'react-icons/fi';
+import NavBarItem from './NavBarItems';
 
-const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState('');
-
-  const handleItemClick = (item) => {
-    setActiveItem(item);
-  };
-
-  const isActive = (item) => {
-    return activeItem === item ? 'bg-primary' : '';
-  };
-
+export default function Sidebar() {
+  const [navBarSize, changeNavBarSize] = useState("large")
   return (
-    <div className="flex flex-col h-screen w-64 bg-black text-gray-100 text-left">
-      <div className="flex items-center justify-center h-16 bg-orange-700">
-        <h1 className="text-xl font-bold">CARFIX</h1>
-      </div>
-      <nav className="flex-grow">
-        <ul className="py-4">
-          <li className= {` flex items-center flex-row pl-6 py-2 text-gray-300 hover:text-white ${isActive('dashboard')}`}>
-            <HomeIcon className="h-6 w-6 text-orange-500 m-4" />
-            <Link href="/home" onClick={() => handleItemClick('dashboard')}>
-              Home
-            </Link>
-          </li>
-          <li className={`flex items-center flex-row pl-6 py-2 text-gray-300 hover:text-white ${isActive('orders')}`}>
-            <CollectionIcon className="h-6 w-6 text-orange-500 m-4" />
-            <Link href="/stepbystepguide" onClick={() => handleItemClick('orders')}>
-              Step-by-Step Guides
-            </Link>
-          </li>
-          <li className={`flex items-center flex-row pl-6 py-2 text-gray-300 hover:text-white ${isActive('customers')}`}>
-            <DocumentAddIcon className="h-6 w-6 text-orange-500 m-4" />
-            <Link href="/addguide" onClick={() => handleItemClick('customers')}>
-              Add Guide
-            </Link>
-          </li>
-          <li className={`flex items-center flex-row pl-6 py-2 text-gray-300 hover:text-white ${isActive('inventory')}`}>
-            <BookmarkIcon className="h-6 w-6 text-orange-500 m-4" />
-            <Link href="/savedguides" onClick={() => handleItemClick('inventory')}>
-              Saved Cars
-            </Link>
-          </li>
-          <li className={`flex items-center flex-row pl-6 py-2 text-gray-300 hover:text-white ${isActive('reports')}`}>
-            <CogIcon className="h-6 w-6 text-orange-500 m-4" />
-            <Link href="/settings" onClick={() => handleItemClick('reports')}>
-              Settings
-            </Link>
-          </li>
-          <li className={`flex items-center flex-row pl-6 py-2 text-gray-300 hover:text-white ${isActive('reports')}`}>
-            <UserIcon className="h-6 w-6 text-orange-500 m-4" />
-            <Link href="/account" onClick={() => handleItemClick('reports')}>
-              Account
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <div className="flex items-center justify-center h-16 bg-orange-700">
-        <p className="text-sm text-left">CARFIX App &copy; 2023</p>
-      </div>
-    </div>
-  );
-};
+    <Flex
+      pos="sticky"
+      left="5"
+      h="100vh"
+      marginTop="2.5vh"
+      boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
+      borderRadius={navBarSize === "small" ? "15px" : "30px"}
+      w={navBarSize === "small" ? "75px" : "200px"}
+      flexDir="column"
+      justifyContent="space-between"
+    >
+      <Flex
+      p="5%"
+      flexDir="column"
+      alignItems="flex-start"
+      as="nav"
+      >
+        <IconButton
+        background="none"
+        mt="5"
+        _hover={{ background: "none" }}
+        icon={<FiMenu />}
+        onClick={() => {
+          if(navBarSize === "small")
+          changeNavBarSize("large")
+          else
+          changeNavBarSize("small")
+        }}
+        />
+        <NavBarItem navBarSize={navBarSize} icon={FiHome} title="Homescreen" />
+        <NavBarItem navBarSize={navBarSize} icon={FiUser} title="UserPage" active />
+        <NavBarItem navBarSize={navBarSize} icon={FiSearch} title="Search Guides" />
+        <NavBarItem navBarSize={navBarSize} icon={FiUpload} title="Upload Guide" />
+        <NavBarItem navBarSize={navBarSize} icon={FiSettings} title="Settings" />
+      </Flex>
 
-export default Sidebar;
+      <Flex
+        p="5%"
+        flexDir="column"
+        width="100%"
+        alignItems={navBarSize == "small" ? "none" : "flex"}
+        mb={4}
+      >
+        <Divider display={navBarSize == "small" ? "none" : "flex"} />
+        <Flex mt={4} align="center">
+          <Avatar size="sm" src="https://images.unsplash.com/photo-1639747280804-dd2d6b3d88ac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" />
+            <Flex flexDir="column" ml={4} display={navBarSize == "small" ? "none" : "flex"}>
+                <Heading as="h3" size="sm">Arthur Tomasi</Heading>
+                <Text color="gray">Admin</Text>
+            </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
+
+  )
+}
