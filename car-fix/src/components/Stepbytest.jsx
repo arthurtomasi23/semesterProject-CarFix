@@ -1,8 +1,8 @@
 import React from 'react'
-import { Box, Image, Badge, Array, StarIcon } from '@chakra-ui/react'
+import { Box, Image, Badge} from '@chakra-ui/react'
 
 
-function StepByStep() {
+export default function Stepbytest() {
     const property = {
       imageUrl: 'https://bit.ly/2Z4KKcF',
       imageAlt: 'Rear view of modern home with pool',
@@ -53,14 +53,6 @@ function StepByStep() {
           </Box>
   
           <Box display='flex' mt='2' alignItems='center'>
-            {Array(5)
-              .fill('')
-              .map((_, i) => (
-                <StarIcon
-                  key={i}
-                  color={i < property.rating ? 'teal.500' : 'gray.300'}
-                />
-              ))}
             <Box as='span' ml='2' color='gray.600' fontSize='sm'>
               {property.reviewCount} reviews
             </Box>
