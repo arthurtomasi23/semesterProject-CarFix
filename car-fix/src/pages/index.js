@@ -1,78 +1,85 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import Link from "next/link";
+import {
+  Button,
+  Input,
+  FormControl,
+  FormLabel,
+  Box,
+  Avatar,
+  Title,
+  Text,
+  IconButton,
+  AvatarBadge,
+  Link,
+} from "@chakra-ui/react";
+import { FiUpload } from "react-icons/fi";
 
-const Basic = () => (
-  <div className="flex flex-col justify-center items-center m-5 px-4 py-8">
-    <h1 className="text-3xl font-bold m-4">Register</h1>
-    <Formik
-      initialValues={{ email: "", password: "" }}
-      validate={(values) => {
-        const errors = {};
-        if (!values.email) {
-          errors.email = "Required";
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-        ) {
-          errors.email = "Invalid email address";
-        }
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
-      }}
+const Register = () => (
+  <Box
+    display="flex"
+    flexDirection="column"
+    justifyContent="center"
+    alignItems="center"
+    m={5}
+    p={8}
+  >
+    <Text fontSize="3xl">Register</Text>
+    <Box mb={4}>
+      <FormLabel htmlFor="email" mb={2} fontSize="lg" fontWeight="medium">
+        Email
+      </FormLabel>
+      <Field
+        type="email"
+        name="email"
+        id="email"
+        as={Input}
+        placeholder="Enter Email"
+      />
+    </Box>
+    <Box mb={4}>
+      <FormLabel htmlFor="password" mb={2} fontSize="lg" fontWeight="medium">
+        Password
+      </FormLabel>
+      <Field
+        name="password"
+        id="password"
+        as={Input}
+        type="password"
+        placeholder="Enter password"
+      />
+    </Box>
+    <Button
+      type="submit"
+      colorScheme="black"
+      py={2}
+      px={4}
+      rounded="md"
+      w="full"
+      variant="solid"
+      backgroundColor="black"
+      //isLoading
+      loadingText="Submitting"
     >
-      {({ isSubmitting }) => (
-        <Form className="max-w-sm">
-          <div className="mb-4">
-            <label htmlFor="email" className="block mb-2 text-lg font-medium">
-              Email
-            </label>
-            <Field
-              type="email"
-              name="email"
-              id="email"
-              className="w-full border text-black border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary"
-            />
-            <ErrorMessage
-              name="email"
-              component="div"
-              className="text-red-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block mb-2 text-lg font-medium"
-            >
-              Password
-            </label>
-            <Field
-              type="password"
-              name="password"
-              id="password"
-              className="w-full border text-black border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary"
-            />
-            <ErrorMessage
-              name="password"
-              component="div"
-              className="text-red-500"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-primary text-black py-2 px-4 rounded-md justify-center w-full bg-white"
-          >
-            <Link href="/home">Submit</Link>
-          </button>
-        </Form>
-      )}
-    </Formik>
-  </div>
+      <Link href="/home">Register</Link>
+    </Button>
+    <Text m="1" textAlign="center">
+      or
+    </Text>
+    <Button
+      colorScheme="black"
+      py={2}
+      px={4}
+      rounded="md"
+      w="full"
+      variant="outline"
+      _hover={{ bg: "black", color: "white" }}
+    >
+      <Link textDecoration="none" m="5" href="/login">
+        Sign In
+      </Link>
+    </Button>
+  </Box>
 );
 
-export default Basic;
+export default Register;

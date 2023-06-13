@@ -12,8 +12,9 @@ export default function NavBarItem({navBarSize, title, icon, active}) {
             <Menu placement="right">
                 <Link
                 backgroundColor={active ? "orange" : "none"}
+                textColor={active ? "white" : "black.500"}
                 p={3}
-                borderRadius={8}
+                borderRadius="15"
                 _hover={{ textDecor:"none", backgroundColor: "orange" }}
                 w={navBarSize == "large" && "100%"}
                 >

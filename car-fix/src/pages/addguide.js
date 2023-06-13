@@ -4,12 +4,12 @@ import HomeScreen from "../components/HomeScreen";
 
 const App = () => {
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex-1">
-        <HomeScreen />
-      </div>
-    </div>
+    <Flex >
+      <HomeScreen />
+        <Flex >
+          <Sidebar />
+        </Flex >
+    </Flex>
   );
 };
 

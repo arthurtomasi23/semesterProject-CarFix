@@ -7,9 +7,6 @@ const App = () => {
   return (
     <Flex>
       <Sidebar />
-
-        <HomeScreen />
-
     </Flex>
   );
 };
