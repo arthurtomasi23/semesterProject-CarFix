@@ -1,7 +1,9 @@
 import React from 'react'
 import { Flex, Link, Text, Icon, Menu, MenuButton } from '@chakra-ui/react'
+import {useRouter} from 'next/router';
 
-export default function NavBarItem({navBarSize, title, icon, active}) {
+export default function NavBarItem({navBarSize, title, icon, link}) {
+    const router = useRouter();
   return (
     <Flex
         mt={30}
@@ -11,16 +13,17 @@ export default function NavBarItem({navBarSize, title, icon, active}) {
         >
             <Menu placement="right">
                 <Link
-                backgroundColor={active ? "orange" : "none"}
-                textColor={active ? "white" : "black.500"}
+                backgroundColor={router.pathname === link ? "orange" : "none"}
+                textColor={router.pathname === link ? "white" : "black.500"}
                 p={3}
                 borderRadius="15"
                 _hover={{ textDecor:"none", backgroundColor: "orange" }}
                 w={navBarSize == "large" && "100%"}
+                href={link}
                 >
                     <MenuButton w="100%" >
                         <Flex>
-                            <Icon as={icon} fontSize="xl" color={active ? "white" : "gray.500"} />
+                            <Icon as={icon} fontSize="xl" color={router.pathname === link ? "white" : "gray.500"} />
                             <Text ml={5} display={navBarSize === "small" ? "none" : "flex"}>{title}</Text>
                         </Flex>
                     </MenuButton>

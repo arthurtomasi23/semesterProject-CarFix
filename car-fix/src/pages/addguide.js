@@ -1,16 +1,13 @@
+import SearchGuides from "@/components/SearchGuides";
+import Sidebar from "@/components/Sidebar";
+import { Flex } from "@chakra-ui/react";
 import React from "react";
-import Sidebar from "../components/Sidebar";
-import HomeScreen from "../components/HomeScreen";
 
-const App = () => {
+export default function addguide() {
   return (
-    <Flex >
-      <HomeScreen />
-        <Flex >
-          <Sidebar />
-        </Flex >
+    <Flex>
+      <Flex mt="2.5vh" ml="6vw" w="100%" mr="2.5vw" p="1">
+      </Flex>
     </Flex>
   );
-};
-
-export default App;
+}
