@@ -1,7 +1,6 @@
 // _app.js
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import "@/styles/globals.css";
 import Sidebar from "@/components/Sidebar";
 
 function MyApp({ Component, pageProps }) {

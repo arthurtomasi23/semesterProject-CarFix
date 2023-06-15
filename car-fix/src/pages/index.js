@@ -31,8 +31,10 @@ const Register = () => {
   return (
     <Flex
       justifyContent="center"
-      height="80vh"
-      mt="10vh"
+      alignItems="center"
+      height="100vh"
+      backgroundPosition="center"
+      backgroundSize="cover"
       backgroundImage="url('https://images.unsplash.com/photo-1551522435-a13afa10f103?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')"
     >
       <Box

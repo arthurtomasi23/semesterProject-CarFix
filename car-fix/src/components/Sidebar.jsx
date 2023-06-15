@@ -45,40 +45,25 @@ export default function Sidebar() {
           changeNavBarSize("small")
         }}
         />
-        
         <NavBarItem
-  navBarSize={navBarSize}
-  icon={FiHome}
-  title="Home"
-  link="/home"
-/>
-<NavBarItem
-  navBarSize={navBarSize}
-  icon={FiUser}
-  title="User"
-  link="/account"
-/>
-<NavBarItem
-  navBarSize={navBarSize}
-  icon={FiSearch}
-  title="Search Guides"
-  link="/searchForGuides"
-/>
-<NavBarItem
-  navBarSize={navBarSize}
-  icon={FiUpload}
-  title="Upload Guide"
-  link="/addguide"
-/>
-<NavBarItem
-  navBarSize={navBarSize}
-  icon={FiSettings}
-  title="Settings"
-  link="/settings"
-/>
-
+          navBarSize={navBarSize}
+          icon={FiHome}
+          title="Home"
+          link="/home"
+        />
+        <NavBarItem
+          navBarSize={navBarSize}
+          icon={FiSearch}
+          title="Search Guides"
+          link="/searchForGuides"
+        />
+        <NavBarItem
+          navBarSize={navBarSize}
+          icon={FiUpload}
+          title="Upload Guide"
+          link="/addguide"
+        />
       </Flex>
-
       <Flex
         p="5%"
         flexDir="column"
@@ -87,11 +72,19 @@ export default function Sidebar() {
         mb={4}
       >
         <Divider display={navBarSize == "small" ? "none" : "flex"} />
-        <Flex mt={4} alignItems="center" justifyContent="center">
-          <Avatar size="sm" src={userPicture == "picture" ? "userpic" : "FiUser"} />
-            <Flex flexDir="column" ml={4} display={navBarSize == "small" ? "none" : "flex"}>
-                <Heading as="h3" size="sm">Arthur Tomasi</Heading>
-            </Flex>
+        <Flex mt={4} alignItems="center" justifyContent="center" flexDir="column">
+        <NavBarItem
+          navBarSize={navBarSize}
+          icon={FiSettings}
+          title="Settings"
+          link="/settings"
+        />
+        <NavBarItem
+          navBarSize={navBarSize}
+          icon={Avatar}
+          title="Account"
+          link="/account"
+        />
         </Flex>
       </Flex>
     </Flex>
