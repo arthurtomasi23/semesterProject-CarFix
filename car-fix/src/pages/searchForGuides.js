@@ -25,7 +25,7 @@ export default function searchForGuides() {
     },
     {
       imageUrl:
-        "https://images.unsplash.com/photo-1613214149922-f1809c99b414?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+        "https://iultrasonic.com/product_images/uploaded_images/carburetor-cleaning-ultrasonic-cleaner.jpeg",
       imageAlt: "Carburetor cleaning",
       difficulty: 8,
       time: 90,
@@ -96,7 +96,7 @@ export default function searchForGuides() {
       shortIntroduction: "Learn how to replace the radiator in your car",
     },
   ];
-  
+
   const [searchInput, setSearchInput] = React.useState("");
 
   const handleChange = (event) => {
