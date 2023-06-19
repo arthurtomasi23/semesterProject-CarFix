@@ -14,10 +14,27 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { FiUpload } from "react-icons/fi";
+import { createClient } from "@supabase/supabase-js";
 
 const Register = () => {
+  const supabaseUrl = "https://ifxtifoyzazhfczenlgu.supabase.co";
+  const supabaseKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmeHRpZm95emF6aGZjemVubGd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODcxNzkwMjksImV4cCI6MjAwMjc1NTAyOX0.Pxnz_x-pcNADR_IsqEC34gyCeS6YQIzqgFXGjHcaCNI";
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef();
+
+  const handleFormSubmit = async (values) => {
+    const { user, error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+    });
+
+    if (error) {
+      alert(error.message);
+    }
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -72,13 +89,18 @@ const Register = () => {
                 borderRadius="full"
                 size="lg"
                 outline="none"
-                _hover={{ bg: "grey" }}
+                _hover={{ bg: "orange" }}
               />
             </AvatarBadge>
           </Avatar>
         </Box>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
           validate={(values) => {
             const errors = {};
             if (!values.email) {
@@ -88,17 +110,41 @@ const Register = () => {
             ) {
               errors.email = "Invalid email address";
             }
+            if (!values.username) {
+              errors.username = "Required";
+            }
+            if (!values.password) {
+              errors.password = "Required";
+            } else if (values.password.length < 6) {
+              errors.password = "Password must be at least 6 characters long";
+            }
+            if (values.password !== values.confirmPassword) {
+              errors.confirmPassword = "Passwords do not match";
+            }
             return errors;
           }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
-          }}
+          onSubmit={handleFormSubmit}
         >
           {({ isSubmitting }) => (
             <Form>
+              <Box mb={4}>
+                <FormLabel
+                  htmlFor="username"
+                  mb={2}
+                  fontSize="lg"
+                  fontWeight="medium"
+                >
+                  Username
+                </FormLabel>
+                <Field
+                  type="text"
+                  name="username"
+                  id="username"
+                  as={Input}
+                  placeholder="Enter Username"
+                />
+                <ErrorMessage name="username" component={Text} color="red" />
+              </Box>
               <Box mb={4}>
                 <FormLabel
                   htmlFor="email"
@@ -115,6 +161,7 @@ const Register = () => {
                   as={Input}
                   placeholder="Enter Email"
                 />
+                <ErrorMessage name="email" component={Text} color="red" />
               </Box>
               <Box mb={4}>
                 <FormLabel
@@ -132,6 +179,29 @@ const Register = () => {
                   type="password"
                   placeholder="Enter password"
                 />
+                <ErrorMessage name="password" component={Text} color="red" />
+              </Box>
+              <Box mb={4}>
+                <FormLabel
+                  htmlFor="confirmPassword"
+                  mb={2}
+                  fontSize="lg"
+                  fontWeight="medium"
+                >
+                  Confirm Password
+                </FormLabel>
+                <Field
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  as={Input}
+                  type="password"
+                  placeholder="Confirm password"
+                />
+                <ErrorMessage
+                  name="confirmPassword"
+                  component={Text}
+                  color="red"
+                />
               </Box>
               <Button
                 type="submit"
@@ -141,10 +211,10 @@ const Register = () => {
                 rounded="md"
                 w="full"
                 variant="solid"
-                //isLoading
+                isLoading={isSubmitting}
                 loadingText="Submitting"
               >
-                <ChakraLink href="/home">Register</ChakraLink>
+                Register
               </Button>
               <Text m="1" textAlign="center">
                 or

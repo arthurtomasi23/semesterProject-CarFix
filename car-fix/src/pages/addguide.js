@@ -10,6 +10,7 @@ import {
   FormLabel,
   Select,
   Button,
+  Textarea,
   FormHelperText,
   FormErrorMessage,
 } from "@chakra-ui/react";
@@ -236,9 +237,10 @@ export default function addguide() {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Full Guide</FormLabel>
-              <Input
+              <Textarea
+                size="lg"
                 variant="outline"
-                placeholder="Write a Step by Step Guide to fixing this Issue..."
+                placeholder="Write a Step by Step Guide to fixing this Issue... (Example: Step 1: Open the hood of your car...)"
               />
             </FormControl>
             <FormControl>
@@ -253,9 +255,7 @@ export default function addguide() {
                 the current date and time
               </FormHelperText>
             </FormControl>
-            <Flex
-            justifyContent="end"
-            >
+            <Flex justifyContent="end">
               <Button
                 mt={4}
                 colorScheme="orange"
