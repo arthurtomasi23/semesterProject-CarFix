@@ -15,11 +15,13 @@ import {
 } from "@chakra-ui/react";
 import { FiUpload } from "react-icons/fi";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 
 const Register = () => {
   const supabase = useSupabaseClient();
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef();
+  const router = useRouter();
 
   const handleFormSubmit = async (values) => {
     const { user, error } = await supabase.auth.signUp({
@@ -28,13 +30,14 @@ const Register = () => {
       options: {
         data: {
           username: values.username,
-          //profilePicture: selectedImage,
+          profilePicture: selectedImage,
         },
       },
     });
-
     if (error) {
       alert(error.message);
+    } else {
+      router.push("/login");
     }
   };
 
@@ -127,6 +130,7 @@ const Register = () => {
             }
             return errors;
           }}
+          onClick={handleButtonClick}
           onSubmit={handleFormSubmit}
         >
           {({ isSubmitting }) => (

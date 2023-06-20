@@ -10,11 +10,13 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 
 export default function login() {
   const supabase = useSupabaseClient();
+  const router = useRouter();
 
-  const handleFormSubmit = async (values) => {
+  const handleLogin = async (values) => {
     const { user, error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,
@@ -22,16 +24,9 @@ export default function login() {
 
     if (error) {
       alert(error.message);
+    } else {
+      router.push("/home");
     }
-    const {
-      data: { user: userData },
-    } = await supabase.auth.getUser();
-    console.log(userData);
-  };
-
-  const fileInputRef = React.createRef();
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
   };
 
   return (
@@ -69,7 +64,7 @@ export default function login() {
             }
             return errors;
           }}
-          onSubmit={handleFormSubmit}
+          onSubmit={handleLogin}
         >
           {({ isSubmitting }) => (
             <Form>
@@ -129,6 +124,7 @@ export default function login() {
                 w="full"
                 variant="solid"
                 loadingText="Submitting"
+                isLoading={isSubmitting}
               >
                 Sign In
               </Button>

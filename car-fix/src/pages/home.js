@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   Flex,
@@ -17,12 +17,19 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export default function home() {
   const supabase = useSupabaseClient();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   async function getUser() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     let metadata = user.user_metadata;
     console.log(metadata);
+    setUsername(metadata.username);
   }
   getUser();
   return (
@@ -45,11 +52,24 @@ export default function home() {
         />
         <Box>
           <Text
+            textAlign="center"
+            justifyContent="center"
             textColor="white"
             fontSize="100px"
             mb="10"
             as="b"
-            zIndex={100}
+            pos="relative"
+          >
+            Hello{username ? `, ${username}` : ""}!
+          </Text>
+          <br />
+          <Text
+            textAlign="center"
+            justifyContent="center"
+            textColor="white"
+            fontSize="100px"
+            mb="10"
+            as="b"
             pos="relative"
           >
             Welcome to CarFix
@@ -59,10 +79,6 @@ export default function home() {
       <Flex flexDir="row" h="100vh" alignItems="center" w="100vw">
         <Flex ml="20" mr="20">
           <Box h="50vh">
-            <Text color="black" fontSize="xl" w="60vw">
-              Hello {}!
-            </Text>
-
             <Text fontSize="50px" color="black" as="b" w="40vw">
               EVERY CAR ENTHUSIASTS DREAM!
             </Text>
