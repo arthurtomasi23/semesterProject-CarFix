@@ -2,6 +2,9 @@
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Sidebar from "@/components/Sidebar";
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import { useState } from "react";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -10,6 +13,7 @@ function MyApp({ Component, pageProps }) {
   // Check if the current route is in the hideSidebarRoutes array
   const shouldHideSidebar = hideSidebarRoutes.includes(router.pathname);
 
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
   return (
     <ChakraProvider>
       {!shouldHideSidebar && (
@@ -17,7 +21,12 @@ function MyApp({ Component, pageProps }) {
           <Sidebar />
         </Flex>
       )}
-      <Component {...pageProps} />
+      <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+      >
+        <Component {...pageProps} />
+      </SessionContextProvider>
     </ChakraProvider>
   );
 }

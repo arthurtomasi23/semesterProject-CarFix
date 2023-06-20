@@ -14,14 +14,10 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { FiUpload } from "react-icons/fi";
-import { createClient } from "@supabase/supabase-js";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const Register = () => {
-  const supabaseUrl = "https://ifxtifoyzazhfczenlgu.supabase.co";
-  const supabaseKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmeHRpZm95emF6aGZjemVubGd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODcxNzkwMjksImV4cCI6MjAwMjc1NTAyOX0.Pxnz_x-pcNADR_IsqEC34gyCeS6YQIzqgFXGjHcaCNI";
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = useSupabaseClient();
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef();
 
@@ -29,6 +25,12 @@ const Register = () => {
     const { user, error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
+      options: {
+        data: {
+          username: values.username,
+          //profilePicture: selectedImage,
+        },
+      },
     });
 
     if (error) {
@@ -75,6 +77,8 @@ const Register = () => {
             Your Profile Picture
           </FormLabel>
           <input
+            name="profilePicture"
+            id="profilePicture"
             type="file"
             ref={fileInputRef}
             style={{ display: "none" }}
@@ -115,8 +119,8 @@ const Register = () => {
             }
             if (!values.password) {
               errors.password = "Required";
-            } else if (values.password.length < 6) {
-              errors.password = "Password must be at least 6 characters long";
+            } else if (values.password.length < 8) {
+              errors.password = "Password must be at least 8 characters long";
             }
             if (values.password !== values.confirmPassword) {
               errors.confirmPassword = "Passwords do not match";

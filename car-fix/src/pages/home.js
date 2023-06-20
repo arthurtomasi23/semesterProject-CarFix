@@ -13,8 +13,19 @@ import {
   AvatarBadge,
   Link as ChakraLink,
 } from "@chakra-ui/react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export default function home() {
+  const supabase = useSupabaseClient();
+  async function getUser() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    console.log(user)
+    let metadata = user.raw_user_meta_data;
+    console.log(metadata);
+  }
+  getUser();
   return (
     <Flex justifyContent="center" alignItems="center" flexDir="column">
       <Box
@@ -25,13 +36,17 @@ export default function home() {
         width="100vw"
         h="100vh"
         bgSize="cover"
-        color="black"
-        opacity={0.8}
         bgImage="url('https://images.unsplash.com/photo-1551522435-a13afa10f103?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')"
       >
+        <Box
+          backgroundColor="rgba(0,0,0,0.4)"
+          pos="absolute"
+          w="100vw"
+          h="100vh"
+        />
         <Box>
           <Text
-            color="black"
+            textColor="white"
             fontSize="100px"
             mb="10"
             as="b"
@@ -42,13 +57,7 @@ export default function home() {
           </Text>
         </Box>
       </Box>
-      <Flex
-        flexDir="row"
-        h="100vh"
-        alignItems="center"
-        bgColor="orange.100"
-        w="100vw"
-      >
+      <Flex flexDir="row" h="100vh" alignItems="center" w="100vw">
         <Flex ml="20" mr="20">
           <Box h="50vh">
             <Text fontSize="50px" color="black" as="b" w="40vw">
