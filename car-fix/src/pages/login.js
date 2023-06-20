@@ -130,7 +130,7 @@ export default function login() {
                 variant="solid"
                 loadingText="Submitting"
               >
-                Sign IN
+                Sign In
               </Button>
               <Text m="1" textAlign="center">
                 or

@@ -21,8 +21,7 @@ export default function home() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(user)
-    let metadata = user.raw_user_meta_data;
+    let metadata = user.user_metadata;
     console.log(metadata);
   }
   getUser();
@@ -39,7 +38,7 @@ export default function home() {
         bgImage="url('https://images.unsplash.com/photo-1551522435-a13afa10f103?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')"
       >
         <Box
-          backgroundColor="rgba(0,0,0,0.4)"
+          backgroundColor="rgba(0,0,0,0.3)"
           pos="absolute"
           w="100vw"
           h="100vh"
@@ -60,6 +59,10 @@ export default function home() {
       <Flex flexDir="row" h="100vh" alignItems="center" w="100vw">
         <Flex ml="20" mr="20">
           <Box h="50vh">
+            <Text color="black" fontSize="xl" w="60vw">
+              Hello {}!
+            </Text>
+
             <Text fontSize="50px" color="black" as="b" w="40vw">
               EVERY CAR ENTHUSIASTS DREAM!
             </Text>
