@@ -14,8 +14,9 @@ import {
   FormHelperText,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { FiUpload } from "react-icons/fi";
 
 export default function addguide() {
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -207,6 +208,7 @@ export default function addguide() {
     full_description: "",
     selectedBrand: "",
     selectedModel: "",
+    pictures: "",
   });
   const handleUpload = async () => {
     const { data: guides, error } = await supabase
@@ -224,6 +226,17 @@ export default function addguide() {
     setDataToUpload({ ...dataToUpload, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(URL.createObjectURL(file));
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const fileInputRef = useRef();
+
   return (
     <Flex>
       <Flex
@@ -240,6 +253,29 @@ export default function addguide() {
         </Text>
         <Box>
           <Stack spacing={4} justifyContent="center" w="60vw">
+            <FormControl>
+              <FormLabel>Picture Upload</FormLabel>
+              <Input
+                alignItems="center"
+                justifyContent="center"
+                type="file"
+                style={{ display: "none" }}
+                ref={fileInputRef}
+                accept={[".jpg", ".png", ".jpeg"]}
+                placeholder="Upload explaining pictures"
+                name="pictures"
+                defaultValue={dataToUpload.pictures}
+                onChange={handlechange}
+              />
+              <Button
+                w="full"
+                p="20"
+                colorScheme="orange"
+                onClick={handleButtonClick}
+              >
+                Upload your Images here!
+              </Button>
+            </FormControl>
             <FormControl isRequired>
               <FormLabel>Car Brand</FormLabel>
               <Select

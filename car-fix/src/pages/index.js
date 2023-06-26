@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 
 const Register = () => {
   const supabase = useSupabaseClient();
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState();
   const fileInputRef = useRef();
   const router = useRouter();
 
@@ -48,6 +48,23 @@ const Register = () => {
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
+  };
+
+  const [dataToUpload, setDataToUpload] = useState({
+    username: "",
+    picture: "",
+  });
+
+  const handleUpload = async () => {
+    const { data: profiles, error } = await supabase
+      .from("profiles")
+      .insert([dataToUpload]);
+
+    if (error) {
+      console.error("Data could not be uploaded:", error);
+      return;
+    }
+    console.log("Data uploaded successfully:", profiles);
   };
 
   return (
@@ -80,13 +97,14 @@ const Register = () => {
             Your Profile Picture
           </FormLabel>
           <input
-            name="profilePicture"
+            name="picture"
             id="profilePicture"
             type="file"
             ref={fileInputRef}
             style={{ display: "none" }}
             accept={[".jpg", ".png", ".jpeg"]}
             onChange={handleImageChange}
+            defaultValue={dataToUpload.picture}
           />
           <Avatar size="2xl" src={selectedImage}>
             <AvatarBadge boxSize="1.25em" onClick={handleButtonClick}>
@@ -150,6 +168,7 @@ const Register = () => {
                   id="username"
                   as={Input}
                   placeholder="Enter Username"
+                  defaultValue={dataToUpload.username}
                 />
                 <ErrorMessage name="username" component={Text} color="red" />
               </Box>
@@ -221,6 +240,7 @@ const Register = () => {
                 variant="solid"
                 isLoading={isSubmitting}
                 loadingText="Submitting"
+                onclick={handleUpload}
               >
                 Register
               </Button>
