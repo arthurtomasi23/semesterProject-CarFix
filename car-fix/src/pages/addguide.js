@@ -15,6 +15,7 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export default function addguide() {
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -26,10 +27,19 @@ export default function addguide() {
       "A2",
       "A3",
       "A4",
+      "S4",
+      "RS4",
       "A5",
+      "S5",
+      "RS5",
       "A6",
+      "S6",
+      "RS6",
       "A7",
+      "S7",
+      "RS7",
       "A8",
+      "R8",
       "Q2",
       "Q3",
       "Q5",
@@ -167,12 +177,51 @@ export default function addguide() {
   };
 
   const handleBrandChange = (event) => {
-    setSelectedBrand(event.target.value);
-    setSelectedModel("");
+    const brand = event.target.value;
+    setSelectedBrand(brand);
+    setSelectedModel(""); //Resets the model to empty when the user changes the brand
+
+    setDataToUpload((prevData) => ({
+      ...prevData,
+      selectedBrand: brand,
+      selectedModel: "", //Resets the models to empty when brand changes to display right models
+    }));
   };
 
   const handleModelChange = (event) => {
-    setSelectedModel(event.target.value);
+    const model = event.target.value;
+    setSelectedModel(model);
+
+    setDataToUpload((prevData) => ({
+      ...prevData,
+      selectedModel: model,
+    }));
+  };
+
+  const supabase = useSupabaseClient();
+
+  const [dataToUpload, setDataToUpload] = useState({
+    created_at: "",
+    title: "",
+    short_description: "",
+    full_description: "",
+    selectedBrand: "",
+    selectedModel: "",
+  });
+  const handleUpload = async () => {
+    const { data: guides, error } = await supabase
+      .from("guides")
+      .insert([dataToUpload]);
+
+    if (error) {
+      console.error("Data could not be uploaded:", error);
+      return;
+    }
+    console.log("Data uploaded successfully:", guides);
+  };
+
+  const handlechange = (e) => {
+    setDataToUpload({ ...dataToUpload, [e.target.name]: e.target.value });
   };
 
   return (
@@ -196,7 +245,8 @@ export default function addguide() {
               <Select
                 placeholder="Select Car Manufacturer"
                 onChange={handleBrandChange}
-                value={selectedBrand}
+                name="selectedBrand"
+                defaultValue={dataToUpload.selectedBrand}
               >
                 <option value="Mercedes Benz">Mercedes Benz</option>
                 <option value="BMW">BMW</option>
@@ -215,7 +265,8 @@ export default function addguide() {
               <Select
                 placeholder="Select Model"
                 onChange={handleModelChange}
-                value={selectedModel}
+                name="selectedModel"
+                defaultValue={dataToUpload.selectedModel}
               >
                 {carModels[selectedBrand]?.map((model) => (
                   <option key={model} value={model}>
@@ -226,13 +277,22 @@ export default function addguide() {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Title</FormLabel>
-              <Input variant="outline" placeholder="Give your guide a title" />
+              <Input
+                variant="outline"
+                placeholder="Give your guide a title"
+                name="title"
+                defaultValue={dataToUpload.title}
+                onChange={handlechange}
+              />
             </FormControl>
             <FormControl>
               <FormLabel>Short Description</FormLabel>
               <Input
                 variant="outline"
                 placeholder="Write a short description..."
+                name="short_description"
+                defaultValue={dataToUpload.short_description}
+                onChange={handlechange}
               />
             </FormControl>
             <FormControl isRequired>
@@ -241,6 +301,9 @@ export default function addguide() {
                 size="lg"
                 variant="outline"
                 placeholder="Write a Step by Step Guide to fixing this Issue... (Example: Step 1: Open the hood of your car...)"
+                name="full_description"
+                defaultValue={dataToUpload.full_description}
+                onChange={handlechange}
               />
             </FormControl>
             <FormControl>
@@ -249,6 +312,9 @@ export default function addguide() {
                 placeholder="Select Date and Time"
                 size="md"
                 type="datetime-local"
+                name="created_at"
+                defaultValue={dataToUpload.created_at}
+                onChange={handlechange}
               />
               <FormHelperText>
                 When no date and time is selected it will automatically select
@@ -257,9 +323,9 @@ export default function addguide() {
             </FormControl>
             <Flex justifyContent="end">
               <Button
+                onClick={handleUpload}
                 mt={4}
                 colorScheme="orange"
-                //isLoading={props.isSubmitting}
                 type="submit"
                 w="15%"
               >
