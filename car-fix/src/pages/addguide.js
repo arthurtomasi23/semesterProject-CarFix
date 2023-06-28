@@ -12,15 +12,17 @@ import {
   Button,
   Textarea,
   FormHelperText,
-  FormErrorMessage,
+  Image,
 } from "@chakra-ui/react";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { FiUpload } from "react-icons/fi";
 
 export default function addguide() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
+  const [selectedImage, setSelectedImage] = useState();
+  const [preview, setPreview] = useState();
 
   const carModels = {
     Audi: [
@@ -201,6 +203,21 @@ export default function addguide() {
 
   const supabase = useSupabaseClient();
 
+  const uploadImage = async () => {
+    const fileName = `public/${selectedImage.name}`;
+    console.log(fileName, selectedImage);
+    const { data, error } = await supabase.storage
+      .from("GuideImages")
+      .upload(fileName, selectedImage);
+    console.log(data, error);
+
+    if (error) {
+      console.error("Error uploading file: ", error.message);
+      return;
+    }
+    return data.path;
+  };
+
   const [dataToUpload, setDataToUpload] = useState({
     created_at: "",
     title: "",
@@ -208,27 +225,35 @@ export default function addguide() {
     full_description: "",
     selectedBrand: "",
     selectedModel: "",
+    year: "",
     pictures: "",
   });
   const handleUpload = async () => {
-    const { data: guides, error } = await supabase
-      .from("guides")
-      .insert([dataToUpload]);
+    const path = await uploadImage();
+    await uploadToTable(path);
 
-    if (error) {
-      console.error("Data could not be uploaded:", error);
-      return;
-    }
     console.log("Data uploaded successfully:", guides);
   };
 
-  const handlechange = (e) => {
+  const uploadToTable = async (path) => {
+    if (!path) {
+      return;
+    }
+    const { data, error } = await supabase.from("guides").insert([
+      {
+        ...dataToUpload,
+        pictures: path,
+      },
+    ]);
+  };
+
+  const handleChange = (e) => {
     setDataToUpload({ ...dataToUpload, [e.target.name]: e.target.value });
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setSelectedImage(URL.createObjectURL(file));
+    setSelectedImage(file);
   };
 
   const handleButtonClick = () => {
@@ -237,24 +262,35 @@ export default function addguide() {
 
   const fileInputRef = useRef();
 
+  useEffect(() => {
+    console.log(selectedImage);
+    if (!selectedImage) {
+      return;
+    }
+    // create the preview
+    const objectUrl = URL.createObjectURL(selectedImage);
+    setPreview(objectUrl);
+
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(preview);
+  }, [selectedImage]);
+
   return (
     <Flex>
       <Flex
         p="1"
         justifyContent="center"
-        h="80vh"
-        mt="10vh"
         flexDirection="column"
         w="100%"
         alignItems="center"
       >
-        <Text m="5" fontSize="2xl">
+        <Text m="10" fontSize="2xl">
           Add Your Own Step-by-Step Guide
         </Text>
         <Box>
           <Stack spacing={4} justifyContent="center" w="60vw">
             <FormControl>
-              <FormLabel>Picture Upload</FormLabel>
+              <FormLabel textAlign="center">Picture Upload</FormLabel>
               <Input
                 alignItems="center"
                 justifyContent="center"
@@ -265,16 +301,24 @@ export default function addguide() {
                 placeholder="Upload explaining pictures"
                 name="pictures"
                 defaultValue={dataToUpload.pictures}
-                onChange={handlechange}
+                onChange={handleImageChange}
               />
-              <Button
-                w="full"
-                p="20"
-                colorScheme="orange"
-                onClick={handleButtonClick}
-              >
-                Upload your Images here!
-              </Button>
+              {selectedImage ? (
+                <Image ml="25%" w="50%" h="50%" size="cover" src={preview} />
+              ) : (
+                <Button
+                  variant="outline"
+                  borderStyle="dashed"
+                  mt="5"
+                  ml="25%"
+                  w="50%"
+                  p="28"
+                  colorScheme="orange"
+                  onClick={handleButtonClick}
+                >
+                  Upload your Images here!
+                </Button>
+              )}
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Car Brand</FormLabel>
@@ -312,13 +356,53 @@ export default function addguide() {
               </Select>
             </FormControl>
             <FormControl isRequired>
+              <FormLabel>Year</FormLabel>
+              <Select
+                placeholder="Select Manufacturing Year"
+                onChange={handleChange}
+                name="year"
+                defaultValue={dataToUpload.year}
+              >
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+                <option value="2015">2015</option>
+                <option value="2014">2014</option>
+                <option value="2013">2013</option>
+                <option value="2012">2012</option>
+                <option value="2011">2011</option>
+                <option value="2010">2010</option>
+                <option value="2009">2009</option>
+                <option value="2008">2008</option>
+                <option value="2007">2007</option>
+                <option value="2006">2006</option>
+                <option value="2005">2005</option>
+                <option value="2004">2004</option>
+                <option value="2003">2003</option>
+                <option value="2002">2002</option>
+                <option value="2001">2001</option>
+                <option value="2000">2000</option>
+                <option value="1999">1999</option>
+                <option value="1998">1998</option>
+                <option value="1997">1997</option>
+                <option value="1996">1996</option>
+                <option value="1995">1995</option>
+                <option value="1994">1994</option>
+              </Select>
+            </FormControl>
+            <FormControl isRequired>
               <FormLabel>Title</FormLabel>
               <Input
                 variant="outline"
                 placeholder="Give your guide a title"
                 name="title"
                 defaultValue={dataToUpload.title}
-                onChange={handlechange}
+                onChange={handleChange}
               />
             </FormControl>
             <FormControl>
@@ -328,7 +412,7 @@ export default function addguide() {
                 placeholder="Write a short description..."
                 name="short_description"
                 defaultValue={dataToUpload.short_description}
-                onChange={handlechange}
+                onChange={handleChange}
               />
             </FormControl>
             <FormControl isRequired>
@@ -339,8 +423,40 @@ export default function addguide() {
                 placeholder="Write a Step by Step Guide to fixing this Issue... (Example: Step 1: Open the hood of your car...)"
                 name="full_description"
                 defaultValue={dataToUpload.full_description}
-                onChange={handlechange}
+                onChange={handleChange}
               />
+            </FormControl>
+            <FormControl flexDir="row" display="flex" isRequired>
+              <FormLabel alignSelf="center">Difficulty</FormLabel>
+              <Select
+                placeholder="Select difficulty level"
+                w="40%"
+                onChange={handleChange}
+                name="difficulty"
+                mr="2"
+                defaultValue={dataToUpload.difficulty}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </Select>
+              <FormLabel>Time</FormLabel>
+              <Input
+                placeholder="z.B. 30"
+                onChange={handleChange}
+                name="time"
+                defaultValue={dataToUpload.time}
+                htmlSize={6}
+                width="auto%"
+              />{" "}
+              Minutes
             </FormControl>
             <FormControl>
               <FormLabel>When did you fix your car?</FormLabel>
@@ -350,7 +466,7 @@ export default function addguide() {
                 type="datetime-local"
                 name="created_at"
                 defaultValue={dataToUpload.created_at}
-                onChange={handlechange}
+                onChange={handleChange}
               />
               <FormHelperText>
                 When no date and time is selected it will automatically select

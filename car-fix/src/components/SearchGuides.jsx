@@ -4,12 +4,14 @@ import {
   Badge,
   Image,
 } from "@chakra-ui/react";
+import { useRouter } from 'next/router';
 
 export default function SearchGuides({ guide, searchInput }) {
+  const router = useRouter();
   if (searchInput.trim() === '' || guide.title.toLowerCase().includes(searchInput.toLowerCase())) {
     return (
-      <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
-        <Image src={guide.imageUrl} alt={guide.imageAlt} />
+      <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' cursor="pointer" onClick= {() => router.push(`/guides/${guide.title}`)}>
+        <Image src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/GuideImages/${guide.pictures}`} />
         <Box p='6' backgroundColor="white">
           <Box display='flex' alignItems='baseline'>
             <Badge borderRadius='full' px='2' colorScheme={(guide.difficulty <= 3) ? 'green' : (guide.difficulty <= 6) ? 'yellow' : 'red'}>
@@ -30,7 +32,7 @@ export default function SearchGuides({ guide, searchInput }) {
             {guide.title}
           </Box>
           <Box>
-            {guide.shortIntroduction}
+            {guide.short_description}
             <Box as='span' color='gray.600' fontSize='sm'></Box>
           </Box>
         </Box>
